@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
-const weekDays = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"];
+const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 function getRandomColor() {
   const letters = "0123456789ABCDEF";
@@ -15,17 +15,29 @@ function getRandomColor() {
 class App extends Component {
   constructor(props) {
     super(props);
-    const days = window.localStorage.getItem("days");
-    const courses = window.localStorage.getItem("courses");
+    let days = window.localStorage.getItem("days");
+    let courses = window.localStorage.getItem("courses");
+
+    if (courses === null && days === null) {
+      const dummyCourses = `[{"id":1662068190642,"code":"CENG201","bgColor":"#FBECC2","color":"black"},{"id":1662068281235,"code":"CHEM202","bgColor":"#D27623","color":"black"},{"code":"TEST101","name":"","bgColor":"#11636C","id":1662068348769,"color":"white"}]`
+      window.localStorage.setItem("courses", dummyCourses)
+      const dummyDays = `[[null,null,null,null,null,null],[null,1662068190642,null,null,null,1662068190642],[null,1662068281235,null,null,null,null],[null,1662068348769,1662068190642,null,1662068348769,null],[null,null,null,1661946869725,1662068190642,1662068281235],[null,null,1662068281235,1662068190642,1662068281235,null],[null,null,null,1662068281235,null,null],[null,null,1662068348769,1662068190642,null,1662068348769],[null,null,null,null,null,null],[null,null,null,null,null,null]]`
+      window.localStorage.setItem("days", dummyDays)
+      courses = window.localStorage.getItem("courses");
+      days = window.localStorage.getItem("days");
+    }
+
+
     console.log(days);
     this.state = {
       courses: courses ? JSON.parse(courses) : [],
       days: days
         ? JSON.parse(days)
         : Array(10)
-            .fill()
-            .map(i => Array(6).fill())
+          .fill()
+          .map(i => Array(6).fill())
     };
+
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onCoursesChange = this.onCoursesChange.bind(this);
@@ -100,7 +112,6 @@ class App extends Component {
             style={{
               width: 200,
               padding: 8,
-              margin: 8,
               backgroundColor: "#eee"
             }}
           >
@@ -118,7 +129,7 @@ class App extends Component {
               />
             </div>
           </div>
-          <div style={{ width: "100%", padding: 8, margin: 8 }}>
+          <div style={{ width: "100%", padding: 8, margin: 8, overflow: 'auto' }}>
             <div style={{ minHeight: "calc(100vh - 32px)" }}>
               <Schedule
                 days={this.state.days}
@@ -187,13 +198,32 @@ class Courses extends React.Component {
             />
           );
         })}
-
-        <input
-          type="text"
-          value={this.state.courseName}
-          onChange={e => this.setState({ courseName: e.target.value })}
-        />
-        <button onClick={this.onCourseAdd}>Ekle</button>
+        <div style={{
+          width: '100%',
+        }}>
+          <input
+            type="text"
+            style={{
+              padding: 8,
+              width: 'fit-content',
+            }}
+            placeholder="Course Code"
+            value={this.state.courseName}
+            onChange={e => this.setState({ courseName: e.target.value })}
+          />
+        </div>
+        <button
+          disabled={!this.state.courseName}
+          style={{
+            padding: 8,
+            border: 'none',
+            cursor: 'pointer',
+            transition: '0.4s',
+            backgroundColor: !this.state.courseName ? "gray" : 'skyblue',
+            width: '100%',
+            marginTop: 8,
+            color: 'white'
+          }} onClick={this.onCourseAdd}>Ekle</button>
       </div>
     );
   }
@@ -343,12 +373,12 @@ const Course = props => {
     >
       <div
         onClick={onClick}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", paddingRight: 20, paddingLeft: 16 }}
         className="center"
       >
         <div>
-          <div>{course.code}</div>
-          {showDsc ? <div style={{fontWeight:"normal", fontSize:12, margin:4}}>{course.name}</div> : null}
+          <div style={{ wordBreak: "break-all" }}>{course.code}</div>
+          {showDsc ? <div style={{ fontWeight: "normal", fontSize: 12, margin: 4 }}>{course.name}</div> : null}
         </div>
       </div>
       <div
@@ -404,18 +434,18 @@ class Schedule extends React.Component {
     const endTime = new Date(
       new Date().setHours(
         new Date(this.startTime).getHours() +
-          new Date(this.lectureTime).getHours(),
+        new Date(this.lectureTime).getHours(),
         new Date(this.startTime).getMinutes() +
-          new Date(this.lectureTime).getMinutes()
+        new Date(this.lectureTime).getMinutes()
       )
     );
     this.startTime = new Date().setHours(
       new Date(this.startTime).getHours() +
-        new Date(this.lectureTime).getHours() +
-        new Date(this.breakTime).getHours(),
+      new Date(this.lectureTime).getHours() +
+      new Date(this.breakTime).getHours(),
       new Date(this.startTime).getMinutes() +
-        new Date(this.lectureTime).getMinutes() +
-        new Date(this.breakTime).getMinutes()
+      new Date(this.lectureTime).getMinutes() +
+      new Date(this.breakTime).getMinutes()
     );
 
     const startTimeString =
@@ -436,41 +466,52 @@ class Schedule extends React.Component {
 
   render() {
     const { days, courses, openDialog } = this.props;
-    return days.map((day, dindex) => {
-      return (
-        <div style={{ display: "flex" }} key={dindex}>
-          {day.map((course, cindex) => {
+    console.log("days", days);
+
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: "repeat(6, minmax(200px, 1fr))" }} >
+        {
+          days.map((day, dindex) => {
             return (
-              <div
-                key={cindex}
-                style={{
-                  border: "1px solid #ccc",
-                  width: "100%",
-                  minHeight: 66
-                }}
-                className="center"
-                onDragOver={this.allowDrop}
-                onDrop={() => this.onDrop(dindex, cindex)}
-              >
-                {!dindex && cindex ? (
-                  weekDays[cindex - 1]
-                ) : !cindex && dindex ? (
-                  this.times[dindex - 1]
-                ) : course ? (
-                  <Course
-                    course={(courses.filter(i => i.id === course) || [])[0]}
-                    onClick={() => openDialog(course)}
-                    onClear={() => this.removeCourse(dindex, cindex)}
-                  />
-                ) : (
-                  ""
-                )}
+              <div style={{
+                display: 'grid', gridTemplateColumns: "repeat(6, minmax(200px, 1fr))",
+                gridColumn: "span 6 / span 6",
+              }} key={dindex}>
+                {day.map((course, cindex) => {
+                  return (
+                    <div
+                      key={cindex}
+                      style={{
+                        border: "1px solid #ccc",
+                        minWidth: 200,
+                        minHeight: 100
+                      }}
+                      className="center"
+                      onDragOver={this.allowDrop}
+                      onDrop={() => this.onDrop(dindex, cindex)}
+                    >
+                      {!dindex && cindex ? (
+                        weekDays[cindex - 1]
+                      ) : !cindex && dindex ? (
+                        this.times[dindex - 1]
+                      ) : course ? (
+                        <Course
+                          course={(courses.filter(i => i.id === course) || [])[0]}
+                          onClick={() => openDialog(course)}
+                          onClear={() => this.removeCourse(dindex, cindex)}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             );
-          })}
-        </div>
-      );
-    });
+          })
+        }
+      </div>
+    )
   }
 }
 
