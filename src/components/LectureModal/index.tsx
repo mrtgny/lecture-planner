@@ -40,7 +40,12 @@ const LectureModal: FC<ILectureModalProps> = ({ lecture, lectureIndex, dayIndex,
     }
 
     const onModalClose = (callback?: any) => {
-        modal.current.close({ callback });
+        modal.current.close({
+            callback: () => {
+                if (callback) callback();
+                onClose();
+            }
+        });
     }
 
     const onSave = () => {
@@ -93,7 +98,7 @@ const LectureModal: FC<ILectureModalProps> = ({ lecture, lectureIndex, dayIndex,
                     }}>
                     <div className="col-span-1" />
                     <div className="col-span-3 flex items-center gap-2 ">
-                        <Button className="w-full max-w-[100px]" onClick={onModalClose}>Decline</Button>
+                        <Button className="w-full max-w-[100px]" onClick={() => onModalClose()}>Decline</Button>
                         <Show showIf={!isNew}>
                             <Button className="w-full max-w-[100px]" danger onClick={main ? onShowWarningModal : onLectureRemove}>Delete</Button>
                         </Show>
