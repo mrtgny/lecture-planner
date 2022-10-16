@@ -1,13 +1,27 @@
 import LectureDropZone from "components/LectureDropZone";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "redux/hooks";
-import { isBrowser } from "utils/functions";
 
 const Schedule = () => {
     const schedule = useAppSelector((state) => state?.schedule?.schedule);
     const times = useAppSelector((state) => state?.schedule?.times);
     const lectures = useAppSelector((state) => state?.schedule?.lectures);
     const values = useAppSelector((state) => state?.schedule?.values);
-    const height = isBrowser() ? `calc(${window.innerHeight}px - 86px)` : `calc(100vh - 86px)`;
+    const [windowInnerHeight, setWindowInnerHeight] = useState("100vh");
+    const height = `calc(${windowInnerHeight} - 86px)`
+
+    useEffect(() => {
+        setWindowInnerHeight(`${window.innerHeight}px`);
+        const listener = (e: Event) => {
+            setWindowInnerHeight(`${(e.target as VisualViewport).height}px`)
+            document.documentElement.scrollTop = 0;
+        }
+        visualViewport?.addEventListener('resize', listener)
+        return () => {
+            visualViewport?.removeEventListener("resize", listener);
+        }
+    }, [])
+
     return (
         <div className="max-w-[100vw] overflow-auto"
             style={{
