@@ -6,4 +6,4 @@ services:
       context: ./
     ports:
       - "3001:80"
-    container_name: lecture-schedule
+    container_name: lecture-planner

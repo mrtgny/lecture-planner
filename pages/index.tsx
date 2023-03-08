@@ -1,15 +1,14 @@
-import Lectures from 'components/Lectures';
-import Schedule from 'components/Schedule';
-import { NextPage } from 'next/types';
+import Lectures from "components/Lectures";
+import Planner from "components/Planner";
+import { NextPage } from "next/types";
 
 const Home: NextPage = () => {
-    return (
-        <div className="min-w-[100vw] min-h-[100vh]" >
-            <Lectures />
-            <Schedule />
-        </div>
-    )
-}
-
+  return (
+    <div className="min-w-[100vw] min-h-[100vh]">
+      <Lectures />
+      <Planner />
+    </div>
+  );
+};
 
 export default Home;
