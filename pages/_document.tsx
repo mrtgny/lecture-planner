@@ -36,6 +36,12 @@ class MyDocument extends Document {
       <Html lang="en">
         <NextHead>
           <meta name="keywords" content={keywords} />
+          <meta property="og:title" content="Lecture Planner" />
+          <meta
+            property="og:description"
+            content="A simple lecture planner app!"
+          />
+          <meta property="og:image" content="https://mgshort.link/smwerqLB0F" />
         </NextHead>
         <body>
           <Main />
