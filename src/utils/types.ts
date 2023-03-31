@@ -1,6 +1,3 @@
-
-interface Dict<T = {}> {
-    [key: string]: T;
+export interface Callback<T = unknown, K = unknown | Promise<unknown>> {
+  (param?: T): K;
 }
-
-export type { Dict };

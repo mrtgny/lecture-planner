@@ -7,7 +7,7 @@ import Show from "components/Show";
 import WarningModal from "components/WarningModal";
 import { FC, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
-import { Handler } from "react-use-gesture/dist/types";
+import { Handlers } from "react-use-gesture/dist/types";
 import {
   addLecture,
   removeLecture,
@@ -15,6 +15,7 @@ import {
   updateLecture,
 } from "redux/features/planner";
 import { useAppDispatch } from "redux/hooks";
+import { Callback } from "utils/types";
 import { ILectureModalProps } from "./types";
 
 const LectureModal: FC<ILectureModalProps> = ({
@@ -31,7 +32,7 @@ const LectureModal: FC<ILectureModalProps> = ({
   const modal = useRef<IModalRef>(null);
   const [reachedToBottom, setReachedToBottom] = useState(false);
 
-  const onScroll: Handler<"scroll", UIEvent> = ({ event }) => {
+  const onScroll: Handlers["onScroll"] = ({ event }) => {
     const target = event.target as HTMLDivElement;
     const clientHeight = target.clientHeight;
     const scrollHeight = target.scrollHeight;
@@ -50,8 +51,8 @@ const LectureModal: FC<ILectureModalProps> = ({
     });
   };
 
-  const onModalClose = (callback?: any) => {
-    modal.current.close({
+  const onModalClose = (callback?: Callback) => {
+    modal.current?.close({
       callback: () => {
         if (callback) callback();
         onClose();
@@ -77,13 +78,13 @@ const LectureModal: FC<ILectureModalProps> = ({
   };
 
   const onWarningModalAccept = () => {
-    onModalClose(() =>
+    const callback = () =>
       dispatch(
         removeLecture({
           lecture,
-        })
-      )
-    );
+        }),
+      );
+    onModalClose(callback);
 
     setShowWarningModal(false);
   };
@@ -94,8 +95,8 @@ const LectureModal: FC<ILectureModalProps> = ({
         removeValue({
           lectureIndex,
           dayIndex,
-        })
-      )
+        }),
+      ),
     );
   };
 

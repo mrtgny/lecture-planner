@@ -1,3 +1,3 @@
 export interface IGoogleAnalyticsProps {
-    gaId: string
+  gaId: string;
 }

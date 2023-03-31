@@ -4,6 +4,7 @@ import Show from "components/Show";
 import { FC, useEffect, useRef, useState } from "react";
 import { animated, useSpring } from "react-spring";
 import { useGesture } from "react-use-gesture";
+import { Handlers } from "react-use-gesture/dist/types";
 import { setValue } from "redux/features/planner";
 import { useAppDispatch } from "redux/hooks";
 import { ILectureProps } from "./types";
@@ -27,7 +28,7 @@ const Lecture: FC<ILectureProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const draggingItem = useRef<HTMLDivElement>(null);
-  const timer = useRef(null);
+  const timer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (isDragging) {
@@ -44,7 +45,7 @@ const Lecture: FC<ILectureProps> = ({
     setShowModal(false);
   };
 
-  const onClick = ({}) => {
+  const onClick = () => {
     if (!hasDragged) setShowModal(true);
   };
 
@@ -56,7 +57,7 @@ const Lecture: FC<ILectureProps> = ({
     }, 300);
   };
 
-  const onDragStart = ({ event }) => {
+  const onDragStart: Handlers["onDragStart"] = ({ event }) => {
     if (!main) return;
     set({ transform: "scale(0.8)" });
     const target = event.target as HTMLElement;
@@ -65,7 +66,7 @@ const Lecture: FC<ILectureProps> = ({
     startDragTimer();
   };
 
-  const onDrag = ({ movement: [mx, my] }) => {
+  const onDrag: Handlers["onDrag"] = ({ movement: [mx, my] }) => {
     if (!main) return;
     const thresholdExceed = Math.abs(mx) > 10 || Math.abs(my) > 10;
     if (thresholdExceed) {
@@ -80,7 +81,7 @@ const Lecture: FC<ILectureProps> = ({
     }
   };
 
-  const onDragEnd = ({ xy }) => {
+  const onDragEnd: Handlers["onDragEnd"] = ({ xy }) => {
     if (!main || !draggingItem.current) {
       clearTimeout(timer.current);
       setIsDragging(false);
@@ -97,8 +98,10 @@ const Lecture: FC<ILectureProps> = ({
       const { x, y, width, height } = elem.getBoundingClientRect().toJSON();
       const offsetWidth = (width - targetWidth) / 2;
       const offsetHeight = (height - targetHeight) / 2;
-      const lectureIndex = parseInt(elem.getAttribute("lectureindex"));
-      const dayIndex = parseInt(elem.getAttribute("dayindex"));
+      const lectureIndexAttr = elem.getAttribute("lectureindex") as string;
+      const daIndexAttr = elem.getAttribute("dayindex") as string;
+      const lectureIndex = parseInt(lectureIndexAttr);
+      const dayIndex = parseInt(daIndexAttr);
       set({
         x: x + offsetWidth,
         y: y + offsetHeight,
@@ -108,7 +111,7 @@ const Lecture: FC<ILectureProps> = ({
               lectureIndex,
               dayIndex,
               lecture,
-            })
+            }),
           );
           set({
             x: offset.current.x,
@@ -143,7 +146,7 @@ const Lecture: FC<ILectureProps> = ({
         delay: false,
         useTouch: true,
       },
-    }
+    },
   );
 
   return (
@@ -160,7 +163,7 @@ const Lecture: FC<ILectureProps> = ({
       >
         {lecture.code}
       </animated.div>
-      <Show showIf={main && isDragging}>
+      <Show showIf={!!main && isDragging}>
         <Portal>
           <animated.div
             ref={draggingItem}

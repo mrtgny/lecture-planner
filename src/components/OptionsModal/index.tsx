@@ -6,6 +6,7 @@ import WarningModal from "components/WarningModal";
 import { FC, useRef, useState } from "react";
 import { resetStore } from "redux/features/planner";
 import { useAppDispatch } from "redux/hooks";
+import { Callback } from "utils/types";
 import { IOptionsModalProps } from "./types";
 
 enum RESET_ENUM {
@@ -17,18 +18,18 @@ const OptionsModal: FC<IOptionsModalProps> = ({ onClose: _onClose }) => {
   const modal = useRef<IModalRef>(null);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const dispatch = useAppDispatch();
-  const resetType = useRef<RESET_ENUM>(null);
+  const resetType = useRef<RESET_ENUM>();
 
   const onShowWarningModal = (type: RESET_ENUM) => {
     resetType.current = type;
     setShowWarningModal(true);
   };
 
-  const onClose = (callback?) => {
-    modal.current.close({
+  const onClose = (callback?: Callback) => {
+    modal.current?.close({
       callback: () => {
         if (callback) callback();
-        _onClose();
+        if (_onClose) _onClose();
       },
     });
   };
@@ -50,7 +51,7 @@ const OptionsModal: FC<IOptionsModalProps> = ({ onClose: _onClose }) => {
       onResetToDemo();
     }
     onClose(() => {
-      dispatch(resetStore({}));
+      dispatch(resetStore());
     });
   };
 

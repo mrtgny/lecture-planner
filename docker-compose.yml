@@ -7,3 +7,9 @@ services:
     ports:
       - "3001:80"
     container_name: lecture-planner
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.65.0/24

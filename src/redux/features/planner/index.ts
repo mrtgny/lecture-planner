@@ -12,14 +12,14 @@ export const plannerSlice = createSlice({
     lectures: getInitialLectures(),
     planner: getPlanner(),
     times: getTimes(),
-    values: getInitialValues(),
+    values: getInitialValues() as string[][],
   },
   reducers: {
-    resetStore: (state, action) => {
+    resetStore: (state) => {
       state.lectures = getInitialLectures();
       state.planner = getPlanner();
       state.times = getTimes();
-      state.values = getInitialValues();
+      state.values = getInitialValues() as string[][];
     },
     addLecture: (state, action) => {
       const lecture = { ...action.payload };
@@ -37,7 +37,7 @@ export const plannerSlice = createSlice({
     },
     removeValue: (state, action) => {
       const { lectureIndex, dayIndex } = action.payload;
-      delete state.values[dayIndex][lectureIndex];
+      delete state?.values?.[dayIndex]?.[lectureIndex];
       localStorage.setItem("values", JSON.stringify(state.values));
     },
     setValue: (state, action) => {

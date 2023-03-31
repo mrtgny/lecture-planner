@@ -15,7 +15,7 @@ const getRandomColor = () => {
 
 const capitalize = (word: string) => {
   if (word) return word;
-  let _word = word.split("");
+  const _word = word.split("");
   _word[0] = _word[0].toUpperCase();
   return _word;
 };
@@ -23,31 +23,6 @@ const capitalize = (word: string) => {
 function dateToStr(date: string) {
   if (!date) return "";
   return new Date(date).toLocaleString();
-}
-
-function abbreviateNumber(value) {
-  var newValue = value;
-  if (value >= 1000) {
-    var suffixes = ["", "k", "m", "b", "t"];
-    var suffixNum = Math.floor(("" + value).length / 3);
-    var shortValue: string | number = "";
-    for (var precision = 2; precision >= 1; precision--) {
-      shortValue = parseFloat(
-        (suffixNum != 0
-          ? value / Math.pow(1000, suffixNum)
-          : value
-        ).toPrecision(precision)
-      );
-      var dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");
-      if (dotLessShortValue.length <= 2) {
-        break;
-      }
-    }
-    if ((shortValue as number) % 1 != 0)
-      shortValue = (shortValue as number).toFixed(1);
-    newValue = shortValue + suffixes[suffixNum];
-  }
-  return newValue as string;
 }
 
 const getLocalStorageLectures = () => window.localStorage.getItem("lectures");
@@ -79,15 +54,15 @@ const getLectureEndTime = (startTime: Date, lectureTime: Date) => {
   return new Date(
     new Date().setHours(
       new Date(startTime).getHours() + new Date(lectureTime).getHours(),
-      new Date(startTime).getMinutes() + new Date(lectureTime).getMinutes()
-    )
+      new Date(startTime).getMinutes() + new Date(lectureTime).getMinutes(),
+    ),
   );
 };
 
 const getNextLectureStartTime = (
   startTime: Date,
   lectureTime: Date,
-  breakTime: Date
+  breakTime: Date,
 ) => {
   return new Date(
     new Date().setHours(
@@ -96,8 +71,8 @@ const getNextLectureStartTime = (
         new Date(breakTime).getHours(),
       new Date(startTime).getMinutes() +
         new Date(lectureTime).getMinutes() +
-        new Date(breakTime).getMinutes()
-    )
+        new Date(breakTime).getMinutes(),
+    ),
   );
 };
 
@@ -116,7 +91,7 @@ const getTimes: () => string[] = () => {
     const startTimeHour = tempStartTime.getHours();
     const startTimeMinute = tempStartTime.getMinutes();
     const startTimeString = `${startTimeHour}.${makeMinuteString(
-      startTimeMinute
+      startTimeMinute,
     )}`;
 
     const endTimeHour = endTime.getHours();
@@ -129,7 +104,7 @@ const getTimes: () => string[] = () => {
   return times;
 };
 
-const stopPropagation: MouseEventHandler<any> = (e) => {
+const stopPropagation: MouseEventHandler = (e) => {
   e.stopPropagation();
 };
 
@@ -148,7 +123,6 @@ export {
   capitalize,
   isBrowser,
   getRandomColor,
-  abbreviateNumber,
   getInitialLectures,
   getPlanner,
   getTimes,

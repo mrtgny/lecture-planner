@@ -1,7 +1,9 @@
+import { Callback } from "utils/types";
+
 export interface IModalProps {
-    onClose: () => void;
+  onClose: Callback;
 }
 
 export interface IModalRef {
-    close: (params?: { callback?: any }) => void
+  close: (params?: { callback?: Callback }) => void;
 }
