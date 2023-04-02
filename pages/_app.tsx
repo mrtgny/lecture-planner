@@ -4,29 +4,12 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import store from "redux/store";
+import { preventZoom } from "utils/functions";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    let lastTouchEnd = 0;
-    const onTouchMove: EventListener = (event: Event) => {
-      if (event.scale !== undefined && event.scale !== 1) {
-        event.preventDefault();
-      }
-    };
-    const onTouchEnd = (event: TouchEvent) => {
-      const now = new Date().getTime();
-      if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
-      }
-      lastTouchEnd = now;
-    };
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd, false);
-    return () => {
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", onTouchEnd);
-    };
+    return preventZoom();
   }, []);
 
   return (

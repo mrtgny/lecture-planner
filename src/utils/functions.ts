@@ -4,6 +4,28 @@ import { INITIAL_LECTURE, INITIAL_VALUES } from "./constants";
 
 const isBrowser = () => typeof window !== "undefined";
 
+export const preventZoom = () => {
+  let lastTouchEnd = 0;
+  const onTouchMove: EventListener = (event: Event) => {
+    if (event.scale !== undefined && event.scale !== 1) {
+      event.preventDefault();
+    }
+  };
+  const onTouchEnd = (event: TouchEvent) => {
+    const now = new Date().getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  };
+  document.addEventListener("touchmove", onTouchMove, { passive: false });
+  document.addEventListener("touchend", onTouchEnd, false);
+  return () => {
+    document.removeEventListener("touchmove", onTouchMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  };
+};
+
 const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
   let color = "#";
