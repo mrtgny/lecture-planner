@@ -17,6 +17,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <Head>
           <title>Lecture Planner</title>
+          <meta property="og:title" content="Lecture Planner" />
+          <meta property="og:image" content="https://mgshort.link/sOBYmEbb0R" />
+          <meta property="og:type" content="website" />
+          <meta name="og:description" content="A simple lecture planner app!" />
           <meta
             name="viewport"
             content={`user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, height=device-height, viewport-fit=cover`}
