@@ -35,7 +35,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <NextHead>
-          <title>Lecture Planner</title>
+          <title>Lecture Planner | Murat Güney</title>
           <meta name="keywords" content={keywords} />
         </NextHead>
         <body>
