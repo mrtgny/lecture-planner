@@ -449,6 +449,16 @@
     "@react-spring/shared" "~9.5.2"
     "@react-spring/types" "~9.5.2"
 
+"@reactivers/next-ga@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@reactivers/next-ga/-/next-ga-1.0.0.tgz#4de74c8201bf7c24747d330efc190fce9e9bae4b"
+  integrity sha512-c4FW8VV83Qmn6sDXQrCLg/xHhagg/qe3xth47mYVPhTtx7Ciytm8IVTr2fHO8kRd3vwqiFUIdsiixAlFNdbKQA==
+
+"@reactivers/next-og@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@reactivers/next-og/-/next-og-1.0.4.tgz#8142ddfa9865e90eb2c1e76f7feacaa36eb5860b"
+  integrity sha512-rTe2sA7N5ai73pigKk6/SOQEIg9/94g8Qqa1Q1DHecwi+ioA9lg6vv/5QanGw1qeyZkw7UoSvJya7V4opLy13A==
+
 "@reduxjs/toolkit@^1.8.4":
   version "1.8.5"
   resolved "https://registry.npmjs.org/@reduxjs/toolkit/-/toolkit-1.8.5.tgz#c14bece03ee08be88467f22dc0ecf9cf875527cd"
